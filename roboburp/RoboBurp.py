@@ -97,7 +97,7 @@ class RoboBurp(object):
             requests.get(url=generate_report_url, proxies=proxyDict)
             time.sleep(30)
             logger.info('XML PATH: BurpResults.xml')
-            self.parse_result('BurpResults.xml')
+            #self.parse_result('BurpResults.xml')
         except BaseException as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))

@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 install_dependencies = (
     'flextls==0.3',
@@ -18,5 +18,6 @@ setup(
     license='MIT License',
     author='Abhay Bhargav',
     author_email='Twitter: @abhaybhargav',
+    install_requires= ['flextls==0.3','robotframework==3.0.2','six==1.11.0','lxml==4.1.1','selenium==3.9.0','robotframework-selenium2library==1.8.0'],
     description='Robot Framework Library for BurpSuite Scanner'
 )
