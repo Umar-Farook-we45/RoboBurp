@@ -10,11 +10,7 @@ from burp import IInterceptedProxyMessage
 from java.io import PrintWriter
 import json
 import re
-import copy
 import os
-import requests
-from datetime import datetime
-import time
 from java.net import URL
 from java.io import File
 import sys
