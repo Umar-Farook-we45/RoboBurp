@@ -8,6 +8,7 @@ from base64 import b64encode
 import os
 import re
 import os.path
+from os.path import expanduser
 import sys
 reload(sys)
 sys.setdefaultencoding('UTF8')
@@ -75,7 +76,8 @@ class RoboBurp(object):
             initiate_scan_url = 'http://localhost:1110'
             proxyDict = {"http": 'http://localhost:{0}'.format(proxy_port)}
             requests.get(url=initiate_scan_url, proxies=proxyDict)
-            with open('.status', 'w') as f:
+            home = expanduser("~")
+            with open('{0}/.status'.format(home), 'w') as f:
                 f.write('0')
             time.sleep(20)
         except BaseException as e:
@@ -90,7 +92,8 @@ class RoboBurp(object):
             while status:
                 requests.get(url=scan_status_url, proxies=proxyDict)
                 time.sleep(5)
-                with open('.status', 'r') as f:
+                home = expanduser("~")
+                with open('{0}/.status'.format(home), 'r') as f:
                     status = f.read()
                 logger.info('Scan running at {0}%'.format(int(status)))
                 if int(status) == 100:

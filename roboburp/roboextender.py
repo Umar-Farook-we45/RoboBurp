@@ -11,6 +11,7 @@ from java.io import PrintWriter
 import json
 import re
 import os
+from os.path import expanduser
 from java.net import URL
 from java.io import File
 import sys
@@ -81,7 +82,8 @@ class BurpExtender(IBurpExtender, IScannerListener, IProxyListener, IHttpListene
 									else:
 										statuses[index] = 0
 								percentage = (sum(statuses)/len(statuses))
-								with open('.status', 'w') as f:
+								home = expanduser("~")
+								with open('{0}/.status'.format(home), 'w') as f:
 									f.write(str(percentage))
 								status = {'status': 'Running', 'progress': '{0}'.format(percentage), 'scanner': 'Burp'}
 								self._stdout.println(json.dumps(status))
@@ -91,7 +93,8 @@ class BurpExtender(IBurpExtender, IScannerListener, IProxyListener, IHttpListene
 								self._stdout.println(status)
 						if all(stat == 'finished' for stat in statuses):
 							percentage = 100
-							with open('.status', 'w') as f:
+							home = expanduser("~")
+							with open('{0}.status'.format(home), 'w') as f:
 								f.write(str(percentage))
 							self.get_issues()
 					else:
