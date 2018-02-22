@@ -4,6 +4,7 @@ Library  Collections
 Library  Selenium2Library
 
 *** Variables ***
+<<<<<<< Updated upstream
 ${PROXY_PORT}  8080
 ${BURP_PATH}  /Users/nithinjois/Documents/tools/BurpSuite/burpsuite_pro_v1.7.32.jar
 ${EXTENDER_PATH}  /Users/nithinjois/Projects/RoboBurp/roboburp/roboextender.py
@@ -11,6 +12,15 @@ ${JYTHON_PATH}  /usr/local/jython-2.7.0/jython.jar
 ${TARGET}  http://104.236.85.150/
 ${BASE_URL}  http://104.236.85.150/
 ${LOGIN_URL}  http://104.236.85.150/login/
+=======
+${BURP_PATH}  /Applications/Burp_Suite_Professional.app/Contents/java/app/burpsuite_pro.jar
+${EXTENDER_PATH}  /Users/abhaybhargav/Documents/Code/Python/RoboBurp/roboburp/roboextender.py
+${JYTHON_PATH}  /usr/local/bin/jython
+${PROXY}  8080
+${TARGET}  http://﻿192.168.56.101/
+${BASE_URL}  http://﻿192.168.56.101/
+${LOGIN_URL}  http://﻿192.168.56.101/login/
+>>>>>>> Stashed changes
 ${APPNAME}  WeCare
 
 
@@ -27,7 +37,7 @@ Open Healthcare App
 Login to Healthcare App
     [Tags]  login
     input text  email_id  bruce.banner@we45.com
-    input password  password  secdevops
+    input password  password  cwasp
     click button  id=submit
     set browser implicit wait  10
     location should be  ${BASE_URL}dashboard/
