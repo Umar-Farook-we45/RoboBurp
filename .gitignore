@@ -32,3 +32,5 @@ roboburp/user.json
 *.robot
 
 roboburp/BurpResults.xml
+
+roboburp/RoboTestBurp.robot

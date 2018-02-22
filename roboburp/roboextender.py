@@ -31,6 +31,8 @@ class BurpExtender(IBurpExtender, IScannerListener, IProxyListener, IHttpListene
 			callbacks.registerProxyListener(self)
 			self._stdout.println(json.dumps({"running": 1}))
 			self._stdout.flush()
+			self.ignore_ext = ['.woff','.woff2','.ttf','.jpg', '.js', '.jpeg', '.gif', '.png', '.xml', '.json', '.css', '.swf', 'svg', 'ico', '.cur', '.pdf']
+			self.ignore_domain = ['mozilla', 'api.keen.io', '*.google.com','*.googleapis.com','*.gstatic.com']
 			self.scan_status_url = 'http://localhost:1111'
 			self.proxyDict = {"http": 'http://localhost:{0}'.format(os.environ.get('port', 8080))}
 			return
@@ -107,12 +109,17 @@ class BurpExtender(IBurpExtender, IScannerListener, IProxyListener, IHttpListene
 				urlpath = re.search('^\w+ (.+) HTTP', request.tostring())
 				if urlpath is not None:
 					url = protocol + "://" + host + urlpath.group(1)
-					if self._scantarget.count(url) == 0:
-						self._scantarget.append(url)
-						https = 0
-						if protocol == "https":
-							https = 1
-						self.all_requests.append({'host': host, 'port': port, 'https': https, 'request': request})
+					unwanted_extension = any(ext for ext in self.ignore_ext if url.endswith(ext))
+					unwanted_domain = any(st for st in self.ignore_domain if st in url)
+					if unwanted_extension or unwanted_domain:
+						pass
+					else:
+						if self._scantarget.count(url) == 0:
+							self._scantarget.append(url)
+							https = 0
+							if protocol == "https":
+								https = 1
+							self.all_requests.append({'host': host, 'port': port, 'https': https, 'request': request})
 						# scaninstance = callbacks.doActiveScan(host, port, https, request)
 						# self._scanlist.append(scaninstance)
 			return
