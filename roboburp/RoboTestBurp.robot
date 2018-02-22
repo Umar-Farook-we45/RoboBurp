@@ -4,10 +4,10 @@ Library  Collections
 Library  Selenium2Library
 
 *** Variables ***
-${BURP_PATH}  /Applications/Burp_Suite_Professional.app/Contents/java/app/burpsuite_pro.jar
-${EXTENDER_PATH}  /Users/abhaybhargav/Documents/Code/Python/RoboBurp/roboburp/roboextender.py
-${JYTHON_PATH}  /usr/local/bin/jython
-${PROXY}  8080
+${PROXY_PORT}  8080
+${BURP_PATH}  /Users/nithinjois/Documents/tools/BurpSuite/burpsuite_pro_v1.7.32.jar
+${EXTENDER_PATH}  /Users/nithinjois/Projects/RoboBurp/roboburp/roboextender.py
+${JYTHON_PATH}  /usr/local/jython-2.7.0/jython.jar
 ${TARGET}  http://104.236.85.150/
 ${BASE_URL}  http://104.236.85.150/
 ${LOGIN_URL}  http://104.236.85.150/login/
@@ -16,11 +16,11 @@ ${APPNAME}  WeCare
 
 *** Test Cases ***
 Initiate BURP
-    initiate burp  ${BURP_PATH}  ${EXTENDER_PATH}  ${JYTHON_PATH}  ${PROXY}
+    start burp gui  ${BURP_PATH}  ${EXTENDER_PATH}  ${JYTHON_PATH}  ${PROXY_PORT}
 
 Open Healthcare App
     [Tags]  phantomjs
-    ${service args}=    Create List    --proxy=127.0.0.1:${PROXY}
+    ${service args}=    Create List    --proxy=127.0.0.1:${PROXY_PORT}
     Create WebDriver  PhantomJS  service_args=${service args}
     go to  ${LOGIN_URL}
 
@@ -39,11 +39,14 @@ Visit Random Pages
     click button  name=look
     go to  ${BASE_URL}secure_tests/
 
-Initiate Scan
-    initiate_scan  ${PROXY}
+Initiate Burp Scan
+    initiate burp scan  ${PROXY_PORT}
 
 Scanning
-    get status  ${PROXY}
+    get burp status  ${PROXY_PORT}
 
-Get Results
-    get results  ${BURP_PATH}  ${PROXY}
+Get Burp Results
+    get burp results  ${BURP_PATH}  ${PROXY_PORT}
+
+Kill Burp
+    kill burp  ${PROXY_PORT}

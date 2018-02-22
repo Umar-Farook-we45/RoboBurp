@@ -44,11 +44,10 @@ class RoboBurp(object):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
-    def initiate_burp(self, burp_jar_path, extender_file_path='{0}/roboextender.py'.format(os.getcwd()), jython_jar_path='/usr/local/jython-2.7.0/jython.jar', proxy_port=8080):
+    def start_burp(self, burp_jar_path, extender_file_path='{0}/roboextender.py'.format(os.getcwd()), jython_jar_path='/usr/local/jython-2.7.0/jython.jar', proxy_port=8080):
         try:
             user_config = self.user_config(extender_file_path, jython_jar_path)
             project_config = self.config_file(proxy_port)
-            # cmd = 'java -jar {0} --user-config-file={1} --config-file={2}'.format(burp_jar_path, user_config, project_config)
             cmd = 'java -jar -Djava.awt.headless=true {0} --user-config-file={1} --config-file={2}'.format(burp_jar_path, user_config, project_config)
             logger.info('{0}'.format(cmd))
             subprocess.Popen(cmd.split(),stdout=open(os.devnull, 'w'),stderr=subprocess.STDOUT)
@@ -57,7 +56,21 @@ class RoboBurp(object):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
-    def initiate_scan(self, proxy_port=8080):
+    def start_burp_gui(self, burp_jar_path, extender_file_path='{0}/roboextender.py'.format(os.getcwd()), jython_jar_path='/usr/local/jython-2.7.0/jython.jar', proxy_port=8080):
+        try:
+            user_config = self.user_config(extender_file_path, jython_jar_path)
+            project_config = self.config_file(proxy_port)
+            cmd = 'java -jar {0} --user-config-file={1} --config-file={2}'.format(burp_jar_path, user_config, project_config)
+            logger.info('{0}'.format(cmd))
+            subprocess.Popen(cmd.split(),stdout=open(os.devnull, 'w'),stderr=subprocess.STDOUT)
+            time.sleep(30)
+        except BaseException as e:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
+
+
+
+    def initiate_burp_scan(self, proxy_port=8080):
         try:
             initiate_scan_url = 'http://localhost:1110'
             proxyDict = {"http": 'http://localhost:{0}'.format(proxy_port)}
@@ -69,7 +82,7 @@ class RoboBurp(object):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
-    def get_status(self, proxy_port=8080):
+    def get_burp_status(self, proxy_port=8080):
         try:
             status = True
             scan_status_url = 'http://localhost:1111'
@@ -88,8 +101,18 @@ class RoboBurp(object):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
+    def kill_burp(self, proxy_port=8080):
+        try:
+            kill_burp_url = 'http://localhost:1113'
+            proxyDict = {"http": 'http://localhost:{0}'.format(proxy_port)}
+            requests.get(url=kill_burp_url, proxies=proxyDict)
+        except BaseException as e:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
-    def get_results(self, burp_jar_path, proxy_port=8080):
+
+
+    def get_burp_results(self, burp_jar_path, proxy_port=8080):
         try:
             generate_report_url = 'http://localhost:1112'
             burp_path = '/'.join(burp_jar_path.split('/')[0:-1])

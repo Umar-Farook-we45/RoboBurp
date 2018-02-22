@@ -100,6 +100,10 @@ class BurpExtender(IBurpExtender, IScannerListener, IProxyListener, IHttpListene
 
 				elif port == 1112:  # Get XML Report
 					self.get_issues()
+
+				elif port == 1113:  # Kill Burp
+				    self._callbacks.exitSuite(False)
+
 				urlpath = re.search('^\w+ (.+) HTTP', request.tostring())
 				if urlpath is not None:
 					url = protocol + "://" + host + urlpath.group(1)

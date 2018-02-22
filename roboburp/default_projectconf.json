@@ -215,7 +215,7 @@
         "intercept_client_requests":{
             "automatically_fix_missing_or_superfluous_new_lines_at_end_of_request":false,
             "automatically_update_content_length_header_when_the_request_is_edited":true,
-            "do_intercept":true,
+            "do_intercept":false,
             "rules":[
                 {
                     "boolean_operator":"and",
@@ -509,7 +509,15 @@
             "insert_url_path_filename":true,
             "insert_url_path_folders":false,
             "max_insertion_points":30,
-            "skip_all_tests_for_parameters":[],
+            "skip_all_tests_for_parameters":[
+                {
+                    "enabled":true,
+                    "expression":"(^gif$|^jpg$|^png$|^css$|^js$|^ico$)",
+                    "item":"name",
+                    "match_type":"matches_regex",
+                    "parameter":"any_parameter"
+                }
+            ],
             "skip_server_side_injection_for_parameters":[
                 {
                     "enabled":true,
