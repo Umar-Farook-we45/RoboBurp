@@ -21,9 +21,9 @@ class RoboBurp(object):
     def __init__(self):
         self.results = None
 
-    def user_config(self, extender_file_path, jython_jar_path):
+    def user_config(self, extender_file_path, jython_jar_path,user_config_path):
         try:
-            user_conf = json.load(open('default_userconf.json','r'))
+            user_conf = json.load(open(user_config_path,'r'))
             user_conf['user_options']['extender']['extensions'][0]['extension_file'] = str(extender_file_path)
             user_conf['user_options']['extender']['python']['location_of_jython_standalone_jar_file'] = str(jython_jar_path)
             with open('user.json', 'w') as f:
@@ -33,9 +33,9 @@ class RoboBurp(object):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
-    def config_file(self, proxy_port):
+    def config_file(self, proxy_port, project_config_path):
         try:
-            project_conf = json.load(open('default_projectconf.json', 'r'))
+            project_conf = json.load(open(project_config_path, 'r'))
             project_conf['proxy']['request_listeners'][0]['listener_port'] = int(proxy_port)
             with open('project.json', 'w') as f:
                 json.dump(project_conf, f)
@@ -44,10 +44,10 @@ class RoboBurp(object):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
-    def start_burp(self, burp_jar_path, extender_file_path='{0}/roboextender.py'.format(os.getcwd()), jython_jar_path='/usr/local/jython-2.7.0/jython.jar', proxy_port=8080):
+    def start_burp(self, burp_jar_path, extender_file_path='{0}/roboextender.py'.format(os.getcwd()), jython_jar_path='/usr/local/jython-2.7.0/jython.jar', proxy_port=8080, user_config_path='{0}/default_userconf.json'.format(os.getcwd()), project_config_path='{0}/default_projectconf.json'.format(os.getcwd())):
         try:
-            user_config = self.user_config(extender_file_path, jython_jar_path)
-            project_config = self.config_file(proxy_port)
+            user_config = self.user_config(extender_file_path, jython_jar_path, user_config_path)
+            project_config = self.config_file(proxy_port, project_config_path)
             cmd = 'java -jar -Djava.awt.headless=true {0} --user-config-file={1} --config-file={2}'.format(burp_jar_path, user_config, project_config)
             logger.info('{0}'.format(cmd))
             subprocess.Popen(cmd.split(),stdout=open(os.devnull, 'w'),stderr=subprocess.STDOUT)
@@ -56,10 +56,10 @@ class RoboBurp(object):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
-    def start_burp_gui(self, burp_jar_path, extender_file_path='{0}/roboextender.py'.format(os.getcwd()), jython_jar_path='/usr/local/jython-2.7.0/jython.jar', proxy_port=8080):
+    def start_burp_gui(self, burp_jar_path, extender_file_path='{0}/roboextender.py'.format(os.getcwd()), jython_jar_path='/usr/local/jython-2.7.0/jython.jar', proxy_port=8080, user_config_path='{0}/default_userconf.json'.format(os.getcwd()), project_config_path='{0}/default_projectconf.json'.format(os.getcwd())):
         try:
-            user_config = self.user_config(extender_file_path, jython_jar_path)
-            project_config = self.config_file(proxy_port)
+            user_config = self.user_config(extender_file_path, jython_jar_path, user_config_path)
+            project_config = self.config_file(proxy_port, project_config_path)
             cmd = 'java -jar {0} --user-config-file={1} --config-file={2}'.format(burp_jar_path, user_config, project_config)
             logger.info('{0}'.format(cmd))
             subprocess.Popen(cmd.split(),stdout=open(os.devnull, 'w'),stderr=subprocess.STDOUT)
@@ -112,29 +112,30 @@ class RoboBurp(object):
 
 
 
-    def get_burp_results(self, burp_jar_path, proxy_port=8080):
+    def get_burp_results(self, burp_jar_path, proxy_port=8080, xml_path='{0}'.format(os.getcwd()), xml_name='BurpResults.xml', burp_db_path='{0}/burp_db.json'.format(os.getcwd())):
         try:
             generate_report_url = 'http://localhost:1112'
             burp_path = '/'.join(burp_jar_path.split('/')[0:-1])
             proxyDict = {"http": 'http://localhost:{0}'.format(proxy_port)}
             requests.get(url=generate_report_url, proxies=proxyDict)
             time.sleep(30)
-            logger.info('XML PATH: BurpResults.xml')
-            self.parse_result('BurpResults.xml')
+            logger.info('XML PATH: {0}/{1}'.format(xml_path, xml_name))
+            self.parse_result('BurpResults.xml', burp_db_path)
+            os.rename('BurpResults.xml', '{0}/{1}'.format(xml_path, xml_name))
         except BaseException as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
 
-    def cwe_dict(self):
+    def cwe_dict(self, burp_db_path):
         try:
-            cwe_dict = json.load(open('burp_db.json', 'r'))
+            cwe_dict = json.load(open(burp_db_path, 'r'))
             return cwe_dict
         except BaseException as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             logger.info('Error: {0} {1}'.format(e, exc_traceback.tb_lineno))
 
-    def parse_result(self, xml_file):
+    def parse_result(self, xml_file, burp_db_path):
         try:
             nreport = xml.parse(xml_file)
             root_elem = nreport.getroot()
@@ -186,7 +187,7 @@ class RoboBurp(object):
                 issue_type = parent_obj.findtext('type', '8389632')
                 if severity:
                     severity = severity_dict.get(severity)
-                cwe_present = self.cwe_dict().get(issue_type, [])
+                cwe_present = self.cwe_dict(burp_db_path).get(issue_type, [])
                 cwe = 0
                 if cwe_present:
                     cwe = cwe_present[0]
