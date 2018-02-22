@@ -30,3 +30,5 @@ roboburp/.status
 roboburp/user.json
 
 *.robot
+
+roboburp/BurpResults.xml

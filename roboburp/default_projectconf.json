@@ -510,13 +510,7 @@
             "insert_url_path_folders":false,
             "max_insertion_points":30,
             "skip_all_tests_for_parameters":[
-                {
-                    "enabled":true,
-                    "expression":"(^gif$|^jpg$|^png$|^css$|^js$|^ico$)",
-                    "item":"name",
-                    "match_type":"matches_regex",
-                    "parameter":"any_parameter"
-                }
+
             ],
             "skip_server_side_injection_for_parameters":[
                 {
