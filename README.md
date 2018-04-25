@@ -44,7 +44,7 @@ initiate burp scan
 ------------------
 Arguments:  [proxy port]
 
-Start BurpSuite GUI
+Initiates Active Scan 
 
 Examples:
 
