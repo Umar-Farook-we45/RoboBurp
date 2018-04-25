@@ -22,24 +22,23 @@ The Robot Framework contacts the BurpSuite extender written in Jython to perfom 
 
 start burp gui
 --------------
-Arguments:  [BurpSuite path, extender path, jython path, proxy port]
+Arguments:  [BurpSuite path, extender path, jython path, proxy port, user config path, project config path]
 
 Start BurpSuite GUI
 
 Examples:
 
-`| start burp gui  | BurpSuite path | extender path | jython path | proxy port |`
+`| start burp gui  | BurpSuite path | extender path | jython path | proxy port | user config path | project config path |`
 
 start burp
 ----------
-Arguments:  [BurpSuite path, extender path, jython path, proxy port]
+Arguments:  [BurpSuite path, extender path, jython path, proxy port, user config path, project config path]
 
 Start BurpSuite in headless mode
 
 Examples:
 
-`| start burp | BurpSuite path | extender path | jython path | proxy port |`
-
+`| start burp | BurpSuite path | extender path | jython path | proxy port | user config path | project config path |`
 
 initiate burp scan
 ------------------
@@ -65,13 +64,13 @@ Examples:
 
 get burp results
 ----------------
-Arguments:  [BurpSuite path, proxy port, XML report path, report name, Burp DB path]
+Arguments:  [BurpSuite path, proxy port, XML report path, report name]
 
 Generates an XML report
 
 Examples:
 
-`| get burp results  | BurpSuite path | proxy port | xml path | report name | burp db path |`
+`| get burp results  | BurpSuite path | proxy port | xml path | report name |`
 
 
 kill burp
