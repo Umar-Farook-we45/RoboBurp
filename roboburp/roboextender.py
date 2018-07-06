@@ -144,3 +144,6 @@ class BurpExtender(IBurpExtender, IScannerListener, IProxyListener, IHttpListene
 			exc_type, exc_value, exc_traceback = sys.exc_info()
 			status = 'Failed - {0} {1}'.format(e, exc_traceback.tb_lineno)
 			self._stdout.println(status)
+
+	def newScanIssue(self, issue):
+		return

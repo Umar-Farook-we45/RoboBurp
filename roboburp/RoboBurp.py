@@ -45,9 +45,12 @@ class RoboBurp(object):
         try:
             user_config = self.user_config(extender_file_path, jython_jar_path, user_config_path)
             project_config = self.config_file(proxy_port, project_config_path)
+            home = expanduser("~")
+            logfile = open('{0}/.burp_log'.format(home),'wb')
+            errfile = open('{0}/.burp_err'.format(home),'wb')
             cmd = 'java -jar -Djava.awt.headless=true {0} --user-config-file={1} --config-file={2}'.format(burp_jar_path, user_config, project_config)
             logger.info('{0}'.format(cmd))
-            subprocess.Popen(cmd.split(),stdout=open(os.devnull, 'w'),stderr=subprocess.STDOUT)
+            subprocess.Popen(cmd.split(),stdout=logfile,stderr=errfile)
             time.sleep(30)
         except BaseException as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
